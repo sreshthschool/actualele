@@ -7,6 +7,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style/common.css">
+    <link rel="stylesheet" href="../style/help.css">
     <title>Help</title>
 </head>
 <body>
@@ -88,7 +89,51 @@
     </nav>
     <div class="home">
         <h1>Help page: FAQs, Contact Form</h1>
-    </div>
+        <div class="container">
+            <h1 class="brand"><span>Acme</span> Web Design</h1>
+            <div class="wrapper">
+              <div class="company-info">
+                <h3>Acme Web Design</h3>
+                <ul>
+                  <li><i class="fa fa-road"></i> 44 Something st</li>
+                  <li><i class="fa fa-phone"></i> (555) 555-5555</li>
+                  <li><i class="fa fa-envelope"></i> test@acme.test</li>
+                </ul>
+              </div>
+              <div class="contact">
+                <h3>Email Us</h3>
+                <div class="alert">Your message has been sent</div>
+                <form id="contactForm">
+                  <p>
+                    <label>Name</label>
+                    <input type="text" name="name" id="name" required>
+                  </p>
+                  <p>
+                    <label>Company</label>
+                    <input type="text" name="company" id="company">
+                  </p>
+                  <p>
+                    <label>Email Address</label>
+                    <input type="email" name="email" id="email" required>
+                  </p>
+                  <p>
+                    <label>Phone Number</label>
+                    <input type="text" name="phone" id="phone">
+                  </p>
+                  <p class="full">
+                    <label>Message</label>
+                    <textarea name="message" rows="5" id="message"></textarea>
+                  </p>
+                  <p class="full">
+                    <button type="submit">Submit</button>
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        
+        </div>
+        <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
     <script>
         const body = document.querySelector('body')
       const sidebar = body.querySelector('nav')
@@ -97,6 +142,68 @@
         toggle.addEventListener("click" , () =>{
     sidebar.classList.toggle("close");
 })
+
+const firebaseConfig = {
+        apiKey: "AIzaSyAKQ7x0iXdc9zPASPl8fe0Zy3w977sslwQ",
+        authDomain: "schooltransportthingtest.firebaseapp.com",
+        databaseURL:
+          "https://schooltransportthingtest-default-rtdb.firebaseio.com",
+        projectId: "schooltransportthingtest",
+        storageBucket: "schooltransportthingtest.appspot.com",
+        messagingSenderId: "1022909830472",
+        appId: "1:1022909830472:web:14e6c0005a15bcfbed4f7d",
+        measurementId: "G-9477HH598G",
+      };
+firebase.initializeApp(firebaseConfig);
+
+// Reference messages collection
+var messagesRef = firebase.database().ref('messages');
+
+// Listen for form submit
+document.getElementById('contactForm').addEventListener('submit', submitForm);
+
+// Submit form
+function submitForm(e){
+  e.preventDefault();
+
+  // Get values
+  var name = getInputVal('name');
+  var company = getInputVal('company');
+  var email = getInputVal('email');
+  var phone = getInputVal('phone');
+  var message = getInputVal('message');
+
+  // Save message
+  saveMessage(name, company, email, phone, message);
+
+  // Show alert
+  document.querySelector('.alert').style.display = 'block';
+
+  // Hide alert after 3 seconds
+  setTimeout(function(){
+    document.querySelector('.alert').style.display = 'none';
+  },3000);
+
+  // Clear form
+  document.getElementById('contactForm').reset();
+}
+
+// Function to get get form values
+function getInputVal(id){
+  return document.getElementById(id).value;
+}
+
+// Save message to firebase
+function saveMessage(name, company, email, phone, message){
+  var newMessageRef = messagesRef.push();
+  newMessageRef.set({
+    name: name,
+    company:company,
+    email:email,
+    phone:phone,
+    message:message
+  });
+}
     </script>
 </body>
 </html>
