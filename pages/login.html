@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style/common.css">
+    <link rel="stylesheet" href="../style/login.css">
+    <title>Login</title>
+</head>
+<body>
+    <div class="center">
+        <h1>Enter Details</h1>
+        <form id="loginform">
+          <div class="txt_field">
+            <input type="email" name="email" id="email" required />
+            <span></span>
+            <label>Username</label>
+          </div>
+          <div class="txt_field">
+            <input type="password" name="password" id="password" required />
+            <span></span>
+            <label>Password</label>
+          </div>
+          <input type="submit" value="Login" id="submitbutton" />
+        </form>
+      </div>
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+    import {
+        getDatabase,
+        set,
+      } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCpM2RrG8786SiP9qa4Z-8AnPIajscjkrI",
+        authDomain: "logintestaut.firebaseapp.com",
+        projectId: "logintestaut",
+        storageBucket: "logintestaut.appspot.com",
+        messagingSenderId: "492854142819",
+        appId: "1:492854142819:web:861677d6e6e8038c5ad556"
+    };
+
+    const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+      const auth = getAuth();
+
+      const loginbutton = document.getElementById("submitbutton");
+      loginbutton.addEventListener("click", (e) => {
+        e.preventDefault();
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            sessionStorage.setItem("userid", user.uid);
+            window.location.href = "../pages/voting.html";
+            // alert("Logged in successfully");
+          })
+          .catch((error) => {
+            const errorcode = error.code;
+            const errormessage = error.message;
+
+            if (errorcode == "auth/wrong-password") {
+              alert("You've entered the wrong password");
+            } else if (errorcode == "auth/invalid-email") {
+              alert("The entered email is invalid");
+            } else if (errorcode == "auth/user-not-found") {
+              alert("The entered email is not registered");
+            } else {
+              alert(errormessage);
+            }
+          });
+      });
+    </script>
+</body>
+</html>
